@@ -1,9 +1,9 @@
 from repositories.TeamsRepository import TeamsRepository
 from utils.enums import CategorieStatus
 
-teamsRepository = TeamsRepository()
+teams_repository = TeamsRepository()
 
-def getRoundAndCategorieByValue(panel):
+def get_stage_and_categorie_by_value(panel):
     if panel == 1:
         return 1, CategorieStatus.WINNER.value
     elif panel == 2:
@@ -28,32 +28,32 @@ def getRoundAndCategorieByValue(panel):
         return 8, CategorieStatus.WINNER.value
     return 0, CategorieStatus.NOT_REGISTER.value
 
-# Un vainqueur est forcément dans les gagnants du round suivant sauf s'il était dans les perdants du round 2
-def getWinnerNextValue(panel):
+# Un vainqueur est forcément dans les gagnants de la manche suivante sauf s'il était dans les perdants de la manche 2
+def get_winner_next_value(panel):
     if panel == 3:
         return CategorieStatus.WINNERANDLOSER.value
     return CategorieStatus.WINNER.value
 
-# Un perdants est forcément dans les perdants du round suivant sauf s'il était dans les vainqueurs du round 2 (auquel cas il est en V/D)
-def getLoserNextValue(panel):
+# Un perdants est forcément dans les perdants de la manche suivante sauf s'il était dans les vainqueurs de la manche 2 (auquel cas il est en V/D)
+def get_loser_next_value(panel):
     if panel == 2:
         return CategorieStatus.WINNERANDLOSER.value
     return CategorieStatus.LOSER.value
 
-# Un vainqueur est forcément affecté au round suivant, sauf s'il est au round3 sans avoir 2 victoires
-def isWinnerAffectedNextRound(panel):
+# Un vainqueur est forcément affecté à la manche suivante, sauf s'il est à la manche 3 sans avoir 2 victoires
+def is_winner_affected_next_stage(panel):
     if panel in (5, 6, 11):
         return False
     return True
 
-# Un loser ne continue que si on est en round 1 ou 2
-def isLoserAffectedNextRound(round):
-    if round in (1, 2):
+# Un loser ne continue que si on est en manche 1 ou 2
+def is_loser_affected_next_stage(stage):
+    if stage in (1, 2):
         return True
     return False
 
 # On saute les 1/16 si moins de 129 équipes
-def getNextRound(round):
-    if round == 3 and teamsRepository.count() < 129:
+def get_next_stage(stage):
+    if stage == 3 and teams_repository.count() < 129:
         return 5
-    return round + 1
+    return stage + 1

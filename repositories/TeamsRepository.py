@@ -8,26 +8,26 @@ class TeamsRepository:
     
     # GETTERS
     @staticmethod
-    def getByNumber(number):
+    def get_by_number(number):
         return Team.query.filter(Team.number == number).first()
 
     @staticmethod
-    def getWaitings(round, cat): 
-        numbers = Team.query.with_entities(Team.number).filter(getattr(Team, f'round{round}') == 1, getattr(Team, f'catRound{round}') == cat).order_by(Team.updated_at.asc()).all()
+    def get_waitings(stage, cat): 
+        numbers = Team.query.with_entities(Team.number).filter(getattr(Team, f'stage{stage}') == 1, getattr(Team, f'cat_stage{stage}') == cat).order_by(Team.updated_at.asc()).all()
         return [number[0] for number in numbers]
 
     @staticmethod
-    def getTeamsWaitings(round, cat):
-        teams = Team.query.filter(getattr(Team, f'round{round}') == 1, getattr(Team, f'catRound{round}') == cat).all()
+    def get_teams_waitings(stage, cat):
+        teams = Team.query.filter(getattr(Team, f'stage{stage}') == 1, getattr(Team, f'cat_stage{stage}') == cat).all()
         return teams
 
     @staticmethod
-    def getAllWaitings():
+    def get_all_waitings():
         teams = Team.query.all()
-        return [team.toDict() for team in teams]
+        return [team.to_dict() for team in teams]
 
     @staticmethod
-    def getMaxTeamNumber():
+    def get_max_team_number():
         return Team.query.with_entities(Team.number).order_by(Team.number.desc()).first()
 
     @staticmethod
@@ -36,34 +36,34 @@ class TeamsRepository:
 
     # INSERT    
     @staticmethod
-    def insertTeams(teams):
+    def insert_teams(teams):
         db.session.add_all(teams)
         db.session.commit()
 
     # UPDATE
     @staticmethod
-    def unregisterTeams(teamsNumbers, round_number):
-        Team.query.filter(Team.number.in_(teamsNumbers)).update({f'round{round_number}': 1})
+    def unregister_teams(teams_numbers, stage):
+        Team.query.filter(Team.number.in_(teams_numbers)).update({f'stage{stage}': 1})
         db.session.commit()
 
     @staticmethod
-    def updateTeams(teams):
+    def update_teams(teams):
         for team in teams:
             db.session.merge(team)
         db.session.commit()
 
     @staticmethod
-    def updateTeamsStatus(teamsNumbers, round_number):
-        Team.query.filter(Team.number.in_(teamsNumbers)).update({f'round{round_number}': TeamStatus.AFFECTED.value})
+    def update_teams_status(teams_numbers, stage):
+        Team.query.filter(Team.number.in_(teams_numbers)).update({f'stage{stage}': TeamStatus.AFFECTED.value})
         db.session.commit()
     
     # DELETE
     @staticmethod
-    def deleteTeam(team):
+    def delete_team(team):
         db.session.delete(team)
         db.session.commit()
 
     @staticmethod
-    def deleteAll():
+    def delete_all():
         Team.query.delete()
         db.session.commit()

@@ -8,68 +8,62 @@ class Team(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     number = db.Column(db.Integer, nullable=False)
-    round1 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    round2 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    round3 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    round4 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    round5 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    round6 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    round7 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    round8 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
-    catRound1 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
-    catRound2 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
-    catRound3 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
-    catRound4 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
-    catRound5 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
-    catRound6 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
-    catRound7 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
-    catRound8 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    stage1 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    stage2 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    stage3 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    stage4 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    stage5 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    stage6 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    stage7 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    stage8 = db.Column(db.Integer, default=TeamStatus.NOT_REGISTER.value)
+    cat_stage1 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    cat_stage2 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    cat_stage3 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    cat_stage4 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    cat_stage5 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    cat_stage6 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    cat_stage7 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
+    cat_stage8 = db.Column(db.Integer, default=CategorieStatus.NOT_REGISTER.value)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def __init__(self, number, round1=TeamStatus.NOT_REGISTER.value, round2=TeamStatus.NOT_REGISTER.value, round3=TeamStatus.NOT_REGISTER.value, 
-                 round4=TeamStatus.NOT_REGISTER.value, round5=TeamStatus.NOT_REGISTER.value, round6=TeamStatus.NOT_REGISTER.value, 
-                 round7=TeamStatus.NOT_REGISTER.value, round8=TeamStatus.NOT_REGISTER.value,
-                 catRound1=CategorieStatus.NOT_REGISTER.value, catRound2=CategorieStatus.NOT_REGISTER.value,
-                 catRound3=CategorieStatus.NOT_REGISTER.value, catRound4=CategorieStatus.NOT_REGISTER.value, 
-                 catRound5=CategorieStatus.NOT_REGISTER.value, catRound6=CategorieStatus.NOT_REGISTER.value, 
-                 catRound7=CategorieStatus.NOT_REGISTER.value, catRound8=CategorieStatus.NOT_REGISTER.value):
+    def __init__(self, number, stage1=TeamStatus.NOT_REGISTER.value, cat_stage1=CategorieStatus.NOT_REGISTER.value):
         self.number = number
-        self.round1 = round1
-        self.round2 = round2
-        self.round3 = round3
-        self.round4 = round4
-        self.round5 = round5
-        self.round6 = round6
-        self.round7 = round7
-        self.round8 = round8
-        self.catRound1 = catRound1
-        self.catRound2 = catRound2
-        self.catRound3 = catRound3
-        self.catRound4 = catRound4
-        self.catRound5 = catRound5
-        self.catRound6 = catRound6
-        self.catRound7 = catRound7
-        self.catRound8 = catRound8
+        self.stage1 = stage1
+        self.stage2 = TeamStatus.NOT_REGISTER.value
+        self.stage3 = TeamStatus.NOT_REGISTER.value
+        self.stage4 = TeamStatus.NOT_REGISTER.value
+        self.stage5 = TeamStatus.NOT_REGISTER.value
+        self.stage6 = TeamStatus.NOT_REGISTER.value
+        self.stage7 = TeamStatus.NOT_REGISTER.value
+        self.stage8 = TeamStatus.NOT_REGISTER.value
+        self.cat_stage1 = cat_stage1
+        self.cat_stage2 = CategorieStatus.NOT_REGISTER.value
+        self.cat_stage3 = CategorieStatus.NOT_REGISTER.value
+        self.cat_stage4 = CategorieStatus.NOT_REGISTER.value
+        self.cat_stage5 = CategorieStatus.NOT_REGISTER.value
+        self.cat_stage6 = CategorieStatus.NOT_REGISTER.value
+        self.cat_stage7 = CategorieStatus.NOT_REGISTER.value
+        self.cat_stage8 = CategorieStatus.NOT_REGISTER.value
 
-    def toDict(self):
+    def to_dict(self):
         return {
             "id": self.id,
             "number": self.number,
-            "round1": self.round1,
-            "round2": self.round2,
-            "round3": self.round3,
-            "round4": self.round4,
-            "round5": self.round5,
-            "round6": self.round6,
-            "round7": self.round7,
-            "round8": self.round8,
-            "catRound1": self.catRound1,
-            "catRound2": self.catRound2,
-            "catRound3": self.catRound3,
-            "catRound4": self.catRound4,
-            "catRound5": self.catRound5,
-            "catRound6": self.catRound6,
-            "catRound7": self.catRound7,
-            "catRound8": self.catRound8
+            "stage1": self.stage1,
+            "stage2": self.stage2,
+            "stage3": self.stage3,
+            "stage4": self.stage4,
+            "stage5": self.stage5,
+            "stage6": self.stage6,
+            "stage7": self.stage7,
+            "stage8": self.stage8,
+            "cat_stage1": self.cat_stage1,
+            "cat_stage2": self.cat_stage2,
+            "cat_stage3": self.cat_stage3,
+            "cat_stage4": self.cat_stage4,
+            "cat_stage5": self.cat_stage5,
+            "cat_stage6": self.cat_stage6,
+            "cat_stage7": self.cat_stage7,
+            "cat_stage8": self.cat_stage8
         }

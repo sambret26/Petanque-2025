@@ -22,7 +22,7 @@ class Match(db.Model):
         self.winner = winner
         self.status = status
 
-    def toDict(self):
+    def to_dict(self):
         return {
             "id": self.id,
             "team1": self.team1,

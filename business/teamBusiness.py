@@ -3,58 +3,58 @@ from utils.enums import CategorieStatus, TeamStatus
 from models.Team import Team
 from utils import utils
 
-teamsRepository = TeamsRepository()
+teams_repository = TeamsRepository()
 
 def count():
-    return teamsRepository.count()
+    return teams_repository.count()
 
-def getWaitings(panel):
+def get_waitings(panel):
     if panel == -1:
-        return teamsRepository.getAllWaitings()
-    round, cat = utils.getRoundAndCategorieByValue(int(panel))
-    return teamsRepository.getWaitings(round, cat)
+        return teams_repository.get_all_waitings()
+    stage, cat = utils.get_stage_and_categorie_by_value(int(panel))
+    return teams_repository.get_waitings(stage, cat)
 
 def register(number):
     teams = []
-    maxTeamNumber = teamsRepository.getMaxTeamNumber()
-    if maxTeamNumber == None:
-        maxTeamNumber = 0
+    max_team_number = teams_repository.get_max_team_number()
+    if max_team_number == None:
+        max_team_number = 0
     else:
-        maxTeamNumber = int(maxTeamNumber[0])
-    for number in range (maxTeamNumber+1, maxTeamNumber+number+1):
-        team = Team(number=number, catRound1=CategorieStatus.WINNER.value, round1=TeamStatus.REGISTER.value)
+        max_team_number = int(max_team_number[0])
+    for number in range (max_team_number+1, max_team_number+number+1):
+        team = Team(number=number, stage1=TeamStatus.REGISTER.value, cat_stage1=CategorieStatus.WINNER.value)
         teams.append(team)
-    teamsRepository.insertTeams(teams)
+    teams_repository.insert_teams(teams)
 
-def unregister(teamNumber):
-    team = teamsRepository.getByNumber(teamNumber)
+def unregister(team_number):
+    team = teams_repository.get_by_number(team_number)
     if team == None:
         return False
-    teamsRepository.deleteTeam(team)
+    teams_repository.delete_team(team)
     return True
 
-def luckyLoser(panel, team):
-    team = teamsRepository.getByNumber(team)
-    round, cat = utils.getRoundAndCategorieByValue(int(panel))
-    nextRound = utils.getNextRound(round)
+def lucky_loser(panel, team):
+    team = teams_repository.get_by_number(team)
+    stage, cat = utils.get_stage_and_categorie_by_value(int(panel))
+    next_stage = utils.get_next_stage(stage)
     if team == None:
         return 201 # Equipe inconnue
-    if getattr(team, f'round{nextRound}') != TeamStatus.NOT_REGISTER.value:
+    if getattr(team, f'stage{next_stage}') != TeamStatus.NOT_REGISTER.value:
         return 202 # En lice au tour suivant
-    if getattr(team, f'round{round}') > TeamStatus.REGISTER.value:
+    if getattr(team, f'stage{stage}') > TeamStatus.REGISTER.value:
         return 203 # Match en cours sur ce tour
-    if getattr(team, f'round{round}') == TeamStatus.NOT_REGISTER.value:
-        setattr(team, f'round{round}', TeamStatus.REGISTER.value)
-        setattr(team, f'catRound{round}', cat)
-        teamsRepository.updateTeams([team])
+    if getattr(team, f'stage{stage}') == TeamStatus.NOT_REGISTER.value:
+        setattr(team, f'stage{stage}', TeamStatus.REGISTER.value)
+        setattr(team, f'cat_stage{stage}', cat)
+        teams_repository.update_teams([team])
         return 204 # Pas encore inscrite à ce tour
-    if getattr(team, f'catRound{round}') == cat:
+    if getattr(team, f'cat_stage{stage}') == cat:
         return 205 # Dejà inscrite sur ce tour
-    if getattr(team, f'catRound{round}') > cat:
-        setattr(team, f'catRound{round}', cat)
-        teamsRepository.updateTeams([team])
+    if getattr(team, f'cat_stage{stage}') > cat:
+        setattr(team, f'cat_stage{stage}', cat)
+        teams_repository.update_teams([team])
         return 206 # Rétrogradation
-    setattr(team, f'round{round}', TeamStatus.REGISTER.value)
-    setattr(team, f'catRound{round}', cat)
-    teamsRepository.updateTeams([team])
+    setattr(team, f'stage{stage}', TeamStatus.REGISTER.value)
+    setattr(team, f'cat_stage{stage}', cat)
+    teams_repository.update_teams([team])
     return 207 # Avancé

@@ -4,12 +4,12 @@ from business import teamBusiness
 teamBp = Blueprint('teams', __name__, url_prefix='/teams')
 
 @teamBp.route('/getNumber', methods=['GET'])
-def getTeamsNumber():
+def get_teams_number():
     return jsonify(teamBusiness.count()), 200
 
 @teamBp.route('/getWaiting/<panel>', methods=['GET'])
-def getWaiting(panel):
-    return jsonify(teamBusiness.getWaitings(int(panel))), 200
+def get_waiting(panel):
+    return jsonify(teamBusiness.get_waitings(int(panel))), 200
 
 @teamBp.route('/register/<number>', methods=['POST'])
 def register(number):
@@ -22,6 +22,6 @@ def unregister(number):
     return jsonify(number), 201
 
 @teamBp.route('/luckyLoser/<panel>/<team>', methods=['POST'])
-def luckyLoser(panel, team):
-    status = teamBusiness.luckyLoser(int(panel), int(team))
+def lucky_loser(panel, team):
+    status = teamBusiness.lucky_loser(int(panel), int(team))
     return jsonify(status), status
