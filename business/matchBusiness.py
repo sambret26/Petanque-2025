@@ -19,9 +19,12 @@ def generate(panel):
     waitings = teams_repository.get_teams_waitings(stage, cat)
     matchs = []
     updates = []
-    generate_matchs(matchs, updates, waitings, panel)
-    matchs_repository.insert_matchs(matchs)
-    teams_repository.update_teams_status(updates, stage)
+    success = generate_matchs(matchs, updates, waitings, panel)
+    if success:
+        matchs_repository.insert_matchs(matchs)
+        teams_repository.update_teams_status(updates, stage)
+        return 200
+    return 201
 
 def ungenerate(panel):
     stage, _ = utils.get_stage_and_categorie_by_value(panel)
@@ -111,12 +114,18 @@ def unset_winner(match_id):
     return 200
 
 def create_match(panel, team_number1, team_number2):
+    match_in_db = matchs_repository.get_by_teams(team_number1, team_number2)
+    if match_in_db != None:
+        return None, 202
     team1 = teams_repository.get_by_number(team_number1)
     team2 = teams_repository.get_by_number(team_number2)
     stage, _ = utils.get_stage_and_categorie_by_value(panel)
     if getattr(team1, f'stage{stage}') != 1 or getattr(team2, f'stage{stage}') != 1:
         return None, 201
-    match = Match(team_number1, team_number2, panel)
+    if team_number1 < team_number2:
+        match = Match(team_number1, team_number2, panel)
+    else:
+        match = Match(team_number2, team_number1, panel)
     setattr(team1, f'stage{stage}', TeamStatus.AFFECTED.value)
     setattr(team2, f'stage{stage}', TeamStatus.AFFECTED.value)
     teams_repository.update_teams([team1, team2])
@@ -137,11 +146,27 @@ def delete_match(match_id):
     return 200
 
 def generate_matchs(matchs, update, teams, panel):
+    matchs_in_db = matchs_repository.get_teams_list()
     random.shuffle(teams)
     value = len(teams) if len(teams) % 2 == 0 else len(teams) - 1
-    for i in range (0, value, 2):
+    i = 0
+    retry = 1
+    while i < value:
         team1 = teams[i].number if teams[i].number < teams[i+1].number else teams[i+1].number
         team2 = teams[i].number if teams[i].number > teams[i+1].number else teams[i+1].number
+        if (str(team1) + "_" + str(team2) in matchs_in_db):
+            if (i+retry+1 < len(teams)):
+                temp = teams[i+1]
+                teams[i+1] = teams[i+retry+1]
+                teams[i+retry+1] = temp
+            else :
+                return False
+            if retry > 5:
+                return False
+            retry += 1
+            continue
         matchs.append(Match(team1, team2, panel))
         update.append(teams[i].number)
         update.append(teams[i+1].number)
+        i += 2
+    return True

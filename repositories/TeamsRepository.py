@@ -23,7 +23,7 @@ class TeamsRepository:
 
     @staticmethod
     def get_all_waitings():
-        teams = Team.query.all()
+        teams = Team.query.order_by(Team.updated_at.asc()).all()
         return [team.to_dict() for team in teams]
 
     @staticmethod

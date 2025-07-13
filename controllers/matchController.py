@@ -9,7 +9,8 @@ def get_matches(panel):
 
 @matchBp.route('/generate/<cat>', methods=['POST'])
 def generate(cat):
-    return jsonify(matchBusiness.generate(int(cat))), 200
+    response = matchBusiness.generate(int(cat))
+    return jsonify(response), response
 
 @matchBp.route('/ungenerate/<cat>', methods=['POST'])
 def ungenerate(cat):

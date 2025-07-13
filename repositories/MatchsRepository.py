@@ -25,6 +25,15 @@ class MatchsRepository:
     def get_not_launched(panel):
         return Match.query.filter(Match.panel == panel, Match.status == 0).all()
 
+    @staticmethod
+    def get_by_teams(team1, team2):
+        return Match.query.filter(((Match.team1 == team1) & (Match.team2 == team2)) | ((Match.team1 == team2) & (Match.team2 == team1))).first()
+
+    @staticmethod
+    def get_teams_list():
+        matchs = Match.query.order_by(desc(Match.status), Match.team1).all()
+        return [str(match.team1) + "_" + str(match.team2) for match in matchs]
+
     # INSERT
     @staticmethod
     def insert_match(match):
