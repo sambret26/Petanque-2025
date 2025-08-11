@@ -11,3 +11,4 @@ apscheduler
 pytz
 requests
 openpyxl
+reportlab

@@ -34,6 +34,16 @@ class MatchsRepository:
         matchs = Match.query.order_by(desc(Match.status), Match.team1).all()
         return [str(match.team1) + "_" + str(match.team2) for match in matchs]
 
+    @staticmethod
+    def get_to_print(rounds, status):
+        from sqlalchemy import and_
+        return Match.query.filter(
+            and_(
+                Match.panel.in_(rounds),
+                Match.status.in_(status)
+            )
+        ).order_by(Match.team1).all()
+
     # INSERT
     @staticmethod
     def insert_match(match):

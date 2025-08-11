@@ -2,6 +2,7 @@ from flask_cors import CORS
 from flask import Flask
 
 from controllers.tournamentController import tournamentBp
+from controllers.printController import printBp
 from controllers.matchController import matchBp
 from controllers.teamController import teamBp
 from config import Config
@@ -14,6 +15,7 @@ app.config.from_object(Config)
 db.init_app(app)
 
 app.register_blueprint(tournamentBp)
+app.register_blueprint(printBp)
 app.register_blueprint(matchBp)
 app.register_blueprint(teamBp)
 
